@@ -22,6 +22,11 @@ body {
 	--color-bg: var(--color-60);
 	--color-accent: var(--color-10);
 
+	--navbar-bg-color: var(--color-30);
+	--navbar-text-color: var(--color-text);
+	--navbar-text-active-color: var(--color-10);
+	--navbar-width: 20vw;
+
 	font-family: var(--font-body);
 
 	background-color: var(--color-bg);
@@ -43,6 +48,29 @@ label, span {
 
 .flex {
 	flex-grow: 1;
+}
+
+.flex-end {
+	display: flex;
+	justify-content: end;
+}
+
+.big, .big * {
+	font-size: 1.5rem;
+}
+
+.nav-link {
+	display: flex;
+	text-decoration: none;
+	cursor: pointer;
+	font-weight: 600;
+	line-height: 2.5rem;
+	margin: .5rem;
+	color: var(--color-10);
+	background-color: transparent;
+	border-color: transparent;
+	border: none;
+	outline: transparent;
 }
 
 /* LIST STYLE */
@@ -82,14 +110,13 @@ button {
 	color: var(--color-30);
 	background-color: var(--color-10);
 	border-color: transparent;
+	border: none;
 	outline: transparent;
 }
 
 button[transparent=true] {
 	color: var(--color-10);
 	background-color: transparent;
-	border-color: transparent;
-	outline: transparent;
 }
 
 button:hover {
@@ -120,12 +147,9 @@ input:disabled {
 
 
 
-@media (min-width: 480px) {
+@media (max-width: 480px) {
 
-	:root {
-		--navbar-width: 20vw;
-
-		--darkmode-switch-size: 2rem;
-
+	body {
+		--navbar-width: 80vw;
 	}
 }

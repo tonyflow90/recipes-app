@@ -31,9 +31,16 @@
 
 {#if $page.data.session}
     <form on:submit|preventDefault={logout}>
-        <button type="submit">logout</button>
+        <button transparent="true" type="submit">
+            <slot />
+            <i class="fa-sharp fa-solid fa-arrow-right-from-bracket" />
+        </button>
     </form>
 {/if}
 
 <style>
+    form {
+        display: flex;
+        flex-direction: row;
+    }
 </style>
