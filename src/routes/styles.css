@@ -42,8 +42,8 @@ h1, h2, h3, h4, h5 {
 }
 
 label, span {
-	color: var(--color-accent);
-	font-weight: 600;
+	/* color: var(--color-accent); */
+	/* font-weight: 600; */
 }
 
 .flex {
@@ -84,14 +84,14 @@ li {
 	display: flex;
 	align-items: center;
 	line-height: 2.5rem;
-	padding: 10px 0;
+	/* padding: 10px 0; */
 	border-bottom: 1px solid var(--color-30);
 }
 
 /* FORM STYLE */
 form {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	gap: .5rem;
 }
 
@@ -112,6 +112,16 @@ button {
 	border-color: transparent;
 	border: none;
 	outline: transparent;
+}
+
+button i {
+	display: flex !important;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	min-height: 2.5rem;
+	min-width: 2rem;
+	font-size: 1.2rem;
 }
 
 button[transparent=true] {
@@ -147,7 +157,7 @@ input:disabled {
 
 
 
-@media (max-width: 480px) {
+@media (max-width: 1280px) {
 
 	body {
 		--navbar-width: 80vw;

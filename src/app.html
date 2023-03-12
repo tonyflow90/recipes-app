@@ -8,19 +8,19 @@
 	<script src="https://kit.fontawesome.com/181467229a.js" crossorigin="anonymous"></script>
 
 	<script>
-						document.documentElement.classList.add("dark");
+	// 					document.documentElement.classList.add("dark");
 
-		(function init() {
-			if (
-				localStorage.theme === "dark" ||
-				(!("theme" in localStorage) &&
-					window.matchMedia("(prefers-color-scheme: dark)").matches)
-			) {
-				document.documentElement.classList.add("dark");
-			} else {
-				document.documentElement.classList.remove("dark");
-			}
-		}())
+	// 	(function init() {
+	// 		if (
+	// 			localStorage.theme === "dark" ||
+	// 			(!("theme" in localStorage) &&
+	// 				window.matchMedia("(prefers-color-scheme: dark)").matches)
+	// 		) {
+	// 			document.documentElement.classList.add("dark");
+	// 		} else {
+	// 			document.documentElement.classList.remove("dark");
+	// 		}
+	// 	}())
 	</script>
 
 	%sveltekit.head%

@@ -14,28 +14,12 @@
 </script>
 
 <div class="navbar" class:opened>
-    <ul class="navbar-items">
-        {#each links as link}
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <li
-                class="navbar-item"
-                class:active={$page.url.pathname === link.path}
-                on:click={() => (opened = false)}
-            >
-                <a data-sveltekit-prefetch href={link.path}>
-                    <span>{link.name}</span>
-                </a>
-            </li>
-        {/each}
-    </ul>
-    <div class="navbar-bottom">
-        <slot name="bottom" />
-
-        <!-- <slot name="bottom" />
-        <ul class="navbar-bottom-grid">
-            {#each links2 as link}
-                svelte-ignore a11y-click-events-have-key-events
+    {#if links}
+        <ul class="navbar-items">
+            {#each links as link}
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <li
+                    class="navbar-item"
                     class:active={$page.url.pathname === link.path}
                     on:click={() => (opened = false)}
                 >
@@ -44,13 +28,13 @@
                     </a>
                 </li>
             {/each}
-            <li class="">
-                <button rounded inverted on:click>Sign Out</button>
-            </li>
-        </ul> -->
+        </ul>
+    {:else}
+        <slot />
+    {/if}
+    <div class="navbar-bottom">
+        <slot name="bottom" />
     </div>
-
-    <!-- <div class="navbar-background-pattern" /> -->
 </div>
 
 <style>

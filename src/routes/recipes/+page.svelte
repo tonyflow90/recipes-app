@@ -2,14 +2,14 @@
 </script>
 
 <svelte:head>
-	<title>Settings</title>
-	<meta name="description" content="Settings page" />
+	<title>Recipes</title>
+	<meta name="description" content="recipes page" />
 </svelte:head>
 
-<h1 class="text-6xl font-bold underline">Recipes</h1>
+<h1>Recipes</h1>
 
-<div class="settings">
-</div>
+<content>
+</content>
 
 <style>
 </style>

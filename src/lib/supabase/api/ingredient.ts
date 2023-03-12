@@ -1,16 +1,24 @@
 import { supabase } from "../client";
 import type { Ingredient } from "../types";
 
-export const addItem = async (itemData: Ingredient) => {
-    return await supabase
-        .from("ingredients")
-        .insert(itemData)
-        .select();
+const TABLE = "ingredients"
+
+export const addItem = (name: string) => {
+    return supabase
+        .from(TABLE)
+        .insert({ name: name });
 };
 
-export const deleteItem = async (itemData: Ingredient) => {
-    return await supabase
-        .from("ingredients")
+export const updateItem = (itemData: Ingredient) => {
+    return supabase
+        .from(TABLE)
+        .update(itemData)
+        .eq("id", itemData.id);
+};
+
+export const deleteItem = (itemData: Ingredient) => {
+    return supabase
+        .from(TABLE)
         .delete()
         .eq("id", itemData.id);
 };

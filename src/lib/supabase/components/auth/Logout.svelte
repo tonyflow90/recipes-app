@@ -31,7 +31,7 @@
 
 {#if $page.data.session}
     <form on:submit|preventDefault={logout}>
-        <button transparent="true" type="submit">
+        <button type="submit">
             <slot />
             <i class="fa-sharp fa-solid fa-arrow-right-from-bracket" />
         </button>

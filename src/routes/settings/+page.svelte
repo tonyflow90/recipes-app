@@ -3,13 +3,13 @@
 
 <svelte:head>
 	<title>Settings</title>
-	<meta name="description" content="Settings page" />
+	<meta name="description" content="settings page" />
 </svelte:head>
 
-<h1 class="text-6xl font-bold underline">Recipes</h1>
+<h1>Settings</h1>
 
-<div class="settings">
-</div>
+<content>
+</content>
 
 <style>
 </style>

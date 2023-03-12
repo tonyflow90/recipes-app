@@ -9,8 +9,8 @@
 	import { dev } from "$app/environment";
 	import { page } from "$app/stores";
 	import toast, { Toaster } from "svelte-french-toast";
-	import Login from "$lib/components/Auth/Login.svelte";
-	import Logout from "$lib/components/Auth/Logout.svelte";
+	import Login from "$lib/supabase/components/auth/Login.svelte";
+	import Logout from "$lib/supabase/components/auth/Logout.svelte";
 	import Navbar from "$lib/components/Navbar.svelte";
 
 	import logo from "$lib/images/logo.png";
@@ -34,14 +34,6 @@
 
 	let links: Link[] = [
 		{ name: "home", path: `${base}/` },
-		{ name: "favorites", path: `${base}/favorites` },
-		{ name: "recipes", path: `${base}/recipes` },
-		{ name: "categories", path: `${base}/categories` },
-		{ name: "ingredients", path: `${base}/ingredients` },
-	];
-
-	let bottomlinks: Link[] = [
-		{ name: "settings", path: `${base}/` },
 		{ name: "favorites", path: `${base}/favorites` },
 		{ name: "recipes", path: `${base}/recipes` },
 		{ name: "categories", path: `${base}/categories` },
