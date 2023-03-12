@@ -1,0 +1,131 @@
+@import '@fontsource/fira-mono';
+
+:root {
+	--color-60: rgb(249, 244, 235);
+	--color-30: rgb(255, 250, 240);
+	--color-10: rgb(154, 46, 255);
+	--color-text: black;
+}
+
+.dark:root {
+	--color-60: rgb(6, 11, 25);
+	--color-30: rgb(15, 28, 64);
+	--color-10: rgb(154, 46, 255);
+	--color-text: white;
+}
+
+body {
+	--font-body: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	--font-title: 'Fira Mono', monospace;
+
+	--color-bg: var(--color-60);
+	--color-accent: var(--color-10);
+
+	font-family: var(--font-body);
+
+	background-color: var(--color-bg);
+	color: var(--color-text);
+
+	margin: 0;
+	overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5 {
+	color: var(--color-accent);
+	font-weight: 800;
+}
+
+label, span {
+	color: var(--color-accent);
+	font-weight: 600;
+}
+
+.flex {
+	flex-grow: 1;
+}
+
+/* LIST STYLE */
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+li {
+	display: flex;
+	align-items: center;
+	line-height: 2.5rem;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--color-30);
+}
+
+/* FORM STYLE */
+form {
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+}
+
+
+/* BUTTON STYLE */
+button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 5px;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 2.5rem;
+	margin: 2px;
+	cursor: pointer;
+	color: var(--color-30);
+	background-color: var(--color-10);
+	border-color: transparent;
+	outline: transparent;
+}
+
+button[transparent=true] {
+	color: var(--color-10);
+	background-color: transparent;
+	border-color: transparent;
+	outline: transparent;
+}
+
+button:hover {
+	filter: brightness(0.7);
+}
+
+/* INPUT STYLE */
+input {
+	display: flex;
+	padding: 0 10px;
+	border-radius: 5px;
+	font-size: 1rem;
+	line-height: 2.5rem;
+	margin: 2px;
+	color: var(--color-text);
+	background-color: var(--color-30);
+	border: 2px solid var(--color-10);
+	outline: transparent;
+}
+
+input[transparent=true] {
+	border: 2px solid var(--color-30);
+}
+
+input:disabled {
+	filter: brightness(0.5);
+}
+
+
+
+@media (min-width: 480px) {
+
+	:root {
+		--navbar-width: 20vw;
+
+		--darkmode-switch-size: 2rem;
+
+	}
+}
