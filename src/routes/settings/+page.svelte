@@ -6,7 +6,7 @@
 	<meta name="description" content="settings page" />
 </svelte:head>
 
-<h1>Settings</h1>
+<h2>Settings</h2>
 
 <content>
 </content>

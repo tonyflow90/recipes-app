@@ -99,9 +99,7 @@ export const actions: Actions = {
             updated_at: new Date()
         }
 
-        deleteItem(ingredient);
-
-        const { data, error } = await updateItem(ingredient);
+        const { data, error } = await deleteItem(ingredient);
 
         if (error) {
             if (error.message) {

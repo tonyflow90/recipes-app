@@ -6,7 +6,7 @@
 	<meta name="description" content="recipes page" />
 </svelte:head>
 
-<h1>Recipes</h1>
+<h2>Recipes</h2>
 
 <content>
 </content>

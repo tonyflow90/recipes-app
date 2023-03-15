@@ -6,10 +6,10 @@
 	<meta name="description" content="About page" />
 </svelte:head>
 
-<h1 class="text-8xl font-bold underline">About</h1>
+<h2 class="text-8xl font-bold underline">About</h2>
 
 <div class="about">
-	<h1>About</h1>
+	<h2>About</h2>
 </div>
 
 <style>

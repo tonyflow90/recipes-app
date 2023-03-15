@@ -23,6 +23,10 @@
 		updated_at: new Date(),
 	};
 
+	let edit: boolean = false;
+
+	let dialogOpened: boolean = false;
+
 	export let data: PageData;
 
 	// functions
@@ -48,7 +52,11 @@
 					break;
 			}
 
-			await update({ reset: false });
+			if (result.type != "success") await update({ reset: false });
+			else {
+				dialogOpened = false;
+				await update();
+			}
 		};
 	};
 
@@ -89,38 +97,54 @@
 	<meta name="description" content="Ingredient list" />
 </svelte:head>
 
-<h1>add ingredient</h1>
-<form action="?/add" method="post" use:enhance={add}>
-	<label for="name">Name</label>
-	<input type="text" name="name" bind:value={newIngredient.name} />
-	<button type="submit">
-		add <i class="fa-sharp fa-solid fa-plus" />
+<div class="head">
+	<h2 class="flex">ingredient list</h2>
+
+	<button transparent on:click={() => (edit = !edit)}>
+		{#if edit}
+			<i class="fa-sharp fa-solid fa-minus" />
+		{:else}
+			<i class="fa-sharp fa-solid fa-pen-to-square" />
+		{/if}
 	</button>
-</form>
 
-<h1>ingredient list</h1>
+	<button transparent on:click={() => (dialogOpened = !dialogOpened)}>
+		<i class="fa-sharp fa-solid fa-plus" />
+	</button>
+</div>
 
-<ul>
+<ul class="container">
 	{#each data.ingredients as ingredient}
 		<li>
 			<!-- <span class="flex">{ingredient.name}</span> -->
-			<form action="?/update" method="post" use:enhance={update}>
+			<form
+				class="flex"
+				action="?/update"
+				method="post"
+				use:enhance={update}
+			>
 				<input
 					class="flex"
 					type="text"
 					name="name"
 					placeholder="name"
-					transparent="true"
+					transparent
+					disabled={!edit}
 					bind:value={ingredient.name}
 				/>
 				<input type="hidden" name="id" bind:value={ingredient.id} />
-				<button type="submit">
+				<button type="submit" disabled={!edit} hidden={!edit}>
 					<i class="fa-sharp fa-regular fa-floppy-disk" />
 				</button>
 			</form>
-			<form action="?/delete" method="post" use:enhance>
+			<form hidden={!edit} action="?/delete" method="post" use:enhance>
 				<input type="hidden" name="id" bind:value={ingredient.id} />
-				<button type="submit" transparent="true">
+				<button
+					type="submit"
+					transparent
+					disabled={!edit}
+					hidden={!edit}
+				>
 					<i class="fa-sharp fa-solid fa-trash-can" />
 				</button>
 			</form>
@@ -128,5 +152,35 @@
 	{/each}
 </ul>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<dialog open={dialogOpened} on:close={() => (dialogOpened = false)}>
+	<button
+		transparent
+		class="rounded dialog-close-btn"
+		on:click={() => (dialogOpened = !dialogOpened)}
+		><i class="fa-sharp fa-solid fa-circle-xmark" /></button
+	>
+	<div on:click|stopPropagation>
+		<h3>add ingredient</h3>
+		<form action="?/add" method="post" use:enhance={add}>
+			<label for="name">Name</label>
+			<input
+				type="text"
+				name="name"
+				transparent
+				bind:value={newIngredient.name}
+			/>
+			<button type="submit">
+				<i class="fa-sharp fa-solid fa-plus" />
+			</button>
+		</form>
+	</div>
+</dialog>
+
 <style>
+	li form {
+		display: flex;
+		flex-direction: row;
+		gap: 0.5rem;
+	}
 </style>

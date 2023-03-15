@@ -14,6 +14,7 @@
 	import Navbar from "$lib/components/Navbar.svelte";
 
 	import logo from "$lib/images/logo.png";
+	import Modal from "$lib/components/Modal.svelte";
 
 	onMount(() => {
 		const {
@@ -43,9 +44,22 @@
 	let isOpen: boolean = false;
 
 	export let data: PageData;
+
+	import { getContext } from "svelte";
+	// const { close } = getContext('simple-modal');
+	let open: boolean = false;
 </script>
 
 <Toaster />
+
+<!-- <Modal bind:open>
+	<div slot="header">
+		<h2>HELLO</h2>
+	</div>
+	<div slot="bottom">
+		<button type="button" on:click={() => (open = !open)}>close</button>
+	</div>
+</Modal> -->
 
 <div class="app">
 	<!-- {#if dev}
@@ -67,7 +81,7 @@
 
 	{#if !data.session && $page.url.pathname !== "/auth"}
 		<main>
-			<h1>Please login</h1>
+			<h2>Please login</h2>
 			<Login />
 		</main>
 	{:else}
@@ -95,7 +109,7 @@
 						<!-- <form on:submit|preventDefault={logout}>
 							<button
 								class="big flex flex-end"
-								transparent="true"
+								transparent
 								type="submit"
 								on:click={() => (isOpen = !isOpen)}
 							>
@@ -114,7 +128,7 @@
 			<div class="header-item">
 				{#if isOpen}
 					<button
-						transparent="true"
+						transparent
 						class="header-item big"
 						on:click={() => (isOpen = !isOpen)}
 					>
@@ -122,7 +136,7 @@
 					</button>
 				{:else}
 					<button
-						transparent="true"
+						transparent
 						class="header-item big"
 						on:click={() => (isOpen = !isOpen)}
 					>
@@ -203,8 +217,10 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		padding: 1rem;
-		width: 100%;
+		width: 100vw;
+		min-height: 90vh;
 		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;

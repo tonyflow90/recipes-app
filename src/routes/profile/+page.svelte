@@ -6,7 +6,7 @@
 	<meta name="description" content="profile page" />
 </svelte:head>
 
-<h1>Profile</h1>
+<h2>Profile</h2>
 
 <div />
 

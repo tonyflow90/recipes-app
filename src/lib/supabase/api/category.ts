@@ -1,7 +1,7 @@
 import { supabase } from "../client";
-import type { Ingredient } from "../types";
+import type { Category } from "../types";
 
-const TABLE = "ingredients"
+const TABLE = "categories"
 
 export const readItems = () => {
     return supabase
@@ -15,14 +15,14 @@ export const addItem = (name: string) => {
         .insert({ name: name });
 };
 
-export const updateItem = (itemData: Ingredient) => {
+export const updateItem = (itemData: Category) => {
     return supabase
         .from(TABLE)
         .update(itemData)
         .eq("id", itemData.id);
 };
 
-export const deleteItem = (itemData: Ingredient) => {
+export const deleteItem = (itemData: Category) => {
     return supabase
         .from(TABLE)
         .delete()

@@ -59,6 +59,12 @@ label, span {
 	font-size: 1.5rem;
 }
 
+.rounded {
+	height: 2.5rem;
+	width: 2.5rem;
+	border-radius: 50%;
+}
+
 .nav-link {
 	display: flex;
 	text-decoration: none;
@@ -73,6 +79,27 @@ label, span {
 	outline: transparent;
 }
 
+/* LAYOUT STYLE */
+.head {
+	display: flex;
+	justify-items: center;
+	align-items: baseline;
+	padding-bottom: 1.5rem;
+	width: 80vw;
+
+}
+
+/* .head h1 {
+	margin: 0 1.5rem;
+} */
+
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-self: center;
+	width: 80vw;
+}
+
 /* LIST STYLE */
 ul {
 	margin: 0;
@@ -85,16 +112,30 @@ li {
 	align-items: center;
 	line-height: 2.5rem;
 	/* padding: 10px 0; */
-	border-bottom: 1px solid var(--color-30);
+	/* border-bottom: 1px solid var(--color-30); */
 }
 
 /* FORM STYLE */
 form {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	gap: .5rem;
 }
 
+/* TAG STYLE */
+.tag {
+	display: flex;
+	align-items: center;
+	border-radius: 25px;
+	/* width: fit-content; */
+	font-size: 1rem;
+	line-height: 2.5rem;
+	cursor: pointer;
+	color: var(--color-10);
+	background-color: var(--color-30);
+	padding: 0.25rem 1rem;
+	margin: 0.25rem;
+}
 
 /* BUTTON STYLE */
 button {
@@ -110,7 +151,7 @@ button {
 	color: var(--color-30);
 	background-color: var(--color-10);
 	border-color: transparent;
-	border: none;
+	/* border: none; */
 	outline: transparent;
 }
 
@@ -124,7 +165,7 @@ button i {
 	font-size: 1.2rem;
 }
 
-button[transparent=true] {
+button[transparent] {
 	color: var(--color-10);
 	background-color: transparent;
 }
@@ -132,6 +173,97 @@ button[transparent=true] {
 button:hover {
 	filter: brightness(0.7);
 }
+
+button:disabled {
+	filter: brightness(0.5);
+	pointer-events: none;
+}
+
+/* CUSTOM BUTTON STYLE */
+.fab-container {
+	position: fixed;
+	bottom: 50px;
+	right: 50px;
+}
+
+.create-btn {
+	position: absolute;
+	min-height: 2.5rem;
+	min-width: 2.5rem;
+	/* right: 10vw;
+	top: 75vmax; */
+}
+
+/* DIALOG STYLE */
+dialog {
+	position: fixed;
+	border-radius: 0.2em;
+	border: none;
+	padding: 2.5rem;
+	cursor: pointer;
+	color: var(--color-text);
+	background-color: var(--color-60);
+	box-shadow: var(--color-30) 0px 5px 15px;
+	overflow: hidden;
+	z-index: 1000;
+}
+
+dialog * {
+	z-index: 1200;
+}
+
+dialog::before {
+	display: block;
+	position: fixed;
+	content: " ";
+	top: 0;
+	left: 0;
+	width: 100vw;
+	/* height: 100%; */
+	background-color: transparent;
+	overflow: hidden;
+}
+
+.dialog-close-btn {
+	position: absolute;
+	min-height: 2.5rem;
+	min-width: 2.5rem;
+	right: 0.2rem;
+	top: 0.2rem;
+}
+
+/*
+dialog>div {
+	padding: 1em;
+}
+
+dialog[open] {
+	animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes zoom {
+	from {
+		transform: scale(0.95);
+	}
+
+	to {
+		transform: scale(1);
+	}
+}
+
+dialog[open]::backdrop {
+	animation: fade 0.2s ease-out;
+}
+
+@keyframes fade {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+} */
 
 /* INPUT STYLE */
 input {
@@ -147,15 +279,18 @@ input {
 	outline: transparent;
 }
 
-input[transparent=true] {
+input[transparent] {
 	border: 2px solid var(--color-30);
 }
 
 input:disabled {
-	filter: brightness(0.5);
+	filter: brightness(0.9);
+	pointer-events: none;
 }
 
-
+*[hidden] {
+	display: none;
+}
 
 @media (max-width: 1280px) {
 

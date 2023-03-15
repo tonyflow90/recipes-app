@@ -14,68 +14,122 @@ import { supabase } from "$lib/supabase/client";
 
 import { fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { Ingredient } from '$lib/supabase/types';
-import { addItem, deleteItem } from '$lib/supabase/api/ingredient';
+import type { Category } from '$lib/supabase/types';
+import { readItems, addItem, updateItem, deleteItem } from '$lib/supabase/api/category';
 
 export const load: PageServerLoad = (async ({ parent }) => {
     await parent();
 
+    const { data: categories } = readCategories();
+
     return {
-        ingredients: readIngredients(),
-        categories: readCategories(),
-        recipes: readRecipes()
+        categories: readCategories()
     };
 })
 
-const readIngredients = async () => {
-    const { data, error } = await supabase.from("ingredients").select();
+const readCategories = async () => {
+    const { data, error } = await readItems();
+
+    if (error) {
+        if (error.message) {
+            return fail(400, {
+                data: data,
+                error: error.details
+            })
+        }
+
+        return fail(500, {
+            data: data,
+            error: 'Server error. Please try again later'
+        })
+    }
     return data;
 }
 
-const readCategories = async () => {
-    const { data: categories } = await supabase.from("categories").select();
-    return categories;
-}
-
-const readRecipes = async () => {
-    const { data: recipes } = await supabase.from("recipes").select();
-    return recipes;
-}
-
-const readIngredient = async () => {
-    const { data: ingredients } = await supabase.from("ingredients").select();
-    return ingredients;
-}
-
 export const actions: Actions = {
-    addIngredient: async ({ request }) => {
-        const formData = await request.formData();
+    add: async ({ request }) => {
+        const formData = Object.fromEntries(await request.formData());
+        const name = formData.name
 
-        let ingredient: Ingredient;
-        for (const entry of formData.entries()) {
-            ingredient[entry[0]] = entry[1];
+        if (!name) return fail(400, { name, error: true })
+
+        const { data, error } = await addItem(name);
+
+        if (error) {
+            if (error.message) {
+                return fail(400, {
+                    data: formData,
+                    error: error.details
+                })
+            }
+
+            return fail(500, {
+                data: formData,
+                error: 'Server error. Please try again later'
+            })
         }
-
-        if (!ingredient.name) return fail(400, { ingredient, error: true })
-
-        addItem(ingredient);
-
-        console.log(ingredient);
-
+        return { status: 200, type: 'success', data: data };
     },
-    deleteIngredient: async ({ request }) => {
-        const formData = await request.formData();
+    update: async ({ request }) => {
+        const formData = Object.fromEntries(await request.formData());
+        const id = formData.id
+        const name = formData.name
 
-        let ingredient: Ingredient = {};
-        for (const entry of formData.entries()) {
-            ingredient[entry[0]] = entry[1];
+        if (!id) return fail(400, { id, error: true })
+        if (!name) return fail(400, { name, error: true })
+
+        const category: Category = {
+            name: name,
+            id: id,
+            updated_at: new Date()
         }
 
-        if (!ingredient.id) return fail(400, { ingredient, error: true })
+        const { data, error } = await updateItem(category);
 
-        deleteItem(ingredient);
+        if (error) {
+            if (error.message) {
+                return fail(400, {
+                    data: formData,
+                    error: error.details
+                })
+            }
 
-        console.log(ingredient);
+            return fail(500, {
+                data: formData,
+                error: 'Server error. Please try again later'
+            })
+        }
+        return { status: 200, type: 'success', data: data };
+    },
+    delete: async ({ request }) => {
+        const formData = await request.formData();
 
+        const id: string = String(formData.get('id'));
+
+        if (!id) return fail(400, { id, error: true })
+
+        const category: Category = {
+            name: '',
+            id: id,
+            created_at: new Date(),
+            updated_at: new Date()
+        }
+
+        const { data, error } = await deleteItem(category);
+
+        if (error) {
+            if (error.message) {
+                return fail(400, {
+                    data: formData,
+                    error: error.details
+                })
+            }
+
+            return fail(500, {
+                data: formData,
+                error: 'Server error. Please try again later'
+            })
+        }
+        return { status: 200, type: 'success', data: data };
     }
 };

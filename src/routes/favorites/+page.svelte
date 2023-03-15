@@ -89,7 +89,7 @@
 	<meta name="description" content="Ingredient list" />
 </svelte:head>
 
-<h1>add ingredient</h1>
+<h2>add ingredient</h2>
 <form action="?/add" method="post" use:enhance={add}>
 	<label for="name">Name</label>
 	<input type="text" name="name" bind:value={newIngredient.name} />
@@ -98,7 +98,7 @@
 	</button>
 </form>
 
-<h1>ingredient list</h1>
+<h2>ingredient list</h2>
 
 <ul>
 	{#each data.ingredients as ingredient}
@@ -110,7 +110,7 @@
 					type="text"
 					name="name"
 					placeholder="name"
-					transparent="true"
+					transparent
 					bind:value={ingredient.name}
 				/>
 				<input type="hidden" name="id" bind:value={ingredient.id} />
@@ -120,7 +120,7 @@
 			</form>
 			<form action="?/delete" method="post" use:enhance>
 				<input type="hidden" name="id" bind:value={ingredient.id} />
-				<button type="submit" transparent="true">
+				<button type="submit" transparent>
 					<i class="fa-sharp fa-solid fa-trash-can" />
 				</button>
 			</form>
