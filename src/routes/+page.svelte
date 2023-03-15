@@ -25,7 +25,9 @@
 	<meta name="description" content="Recipes App" />
 </svelte:head>
 
-<h2>Welcome to my Recipes-App</h2>
+<div class="flex justify-center">
+	<h2 class="flex text-center	">Welcome to my Recipes-App</h2>
+</div>
 
 <style>
 </style>

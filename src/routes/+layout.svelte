@@ -1,20 +1,36 @@
 <script lang="ts">
+	import "../app.postcss";
 	import { supabase } from "$lib/supabase/client";
-	import { invalidate } from "$app/navigation";
+	import { goto, invalidate } from "$app/navigation";
 	import { onMount } from "svelte";
 	import { base } from "$app/paths";
-	import "./styles.css";
+	// import "./styles.css";
 
 	import type { PageData } from "./$types";
 	import { dev } from "$app/environment";
 	import { page } from "$app/stores";
-	import toast, { Toaster } from "svelte-french-toast";
+	import { Toast, toastStore } from "@skeletonlabs/skeleton";
+	import type { ToastSettings } from "@skeletonlabs/skeleton";
 	import Login from "$lib/supabase/components/auth/Login.svelte";
 	import Logout from "$lib/supabase/components/auth/Logout.svelte";
 	import Navbar from "$lib/components/Navbar.svelte";
 
 	import logo from "$lib/images/logo.png";
-	import Modal from "$lib/components/Modal.svelte";
+
+	import { AppShell, AppBar, AppRailTile } from "@skeletonlabs/skeleton";
+	import { AppRail } from "@skeletonlabs/skeleton";
+	import { writable, type Writable } from "svelte/store";
+
+	// Your selected Skeleton theme:
+	import "@skeletonlabs/skeleton/themes/theme-skeleton.css";
+
+	// This contains the bulk of Skeletons required styles:
+	import "@skeletonlabs/skeleton/styles/all.css";
+
+	// Finally, your application's global stylesheet (sometimes labeled 'app.css')
+	import "../app.postcss";
+
+	import { LightSwitch } from "@skeletonlabs/skeleton";
 
 	onMount(() => {
 		const {
@@ -31,223 +47,329 @@
 	type Link = {
 		name: string;
 		path: string;
+		cssClasses: string;
 	};
 
 	let links: Link[] = [
-		{ name: "home", path: `${base}/` },
-		{ name: "favorites", path: `${base}/favorites` },
-		{ name: "recipes", path: `${base}/recipes` },
-		{ name: "categories", path: `${base}/categories` },
-		{ name: "ingredients", path: `${base}/ingredients` },
+		{
+			name: "home",
+			path: `${base}/`,
+			cssClasses: "fa-sharp fa-solid fa-house",
+		},
+		{
+			name: "favorites",
+			path: `${base}/favorites`,
+			cssClasses: "fa-sharp fa-solid fa-heart",
+		},
+		{
+			name: "recipes",
+			path: `${base}/recipes`,
+			cssClasses: "fa-sharp fa-solid fa-book",
+		},
+		{
+			name: "categories",
+			path: `${base}/categories`,
+			cssClasses: "fa-sharp fa-solid fa-tag",
+		},
+		{
+			name: "ingredients",
+			path: `${base}/ingredients`,
+			cssClasses: "fa-sharp fa-solid fa-leaf",
+		},
 	];
 
-	let isOpen: boolean = false;
+	let opened: boolean = false;
 
 	export let data: PageData;
 
 	import { getContext } from "svelte";
-	// const { close } = getContext('simple-modal');
+	import { AuthApiError, type EmailOtpType } from "@supabase/supabase-js";
+
 	let open: boolean = false;
+
+	//
+	let loading: boolean = false;
+	let loginRequestSend: boolean = false;
+
+	let email: string = "tonyflow90@gmail.com",
+		type: EmailOtpType = "magiclink",
+		token: string;
+
+	const toastError: ToastSettings = {
+		message: "",
+		timeout: 1500,
+		background: "variant-filled-warning",
+	};
+
+	const toastSuccess: ToastSettings = {
+		message: "",
+		timeout: 1500,
+		background: "variant-filled-warning",
+	};
+
+	// functions
+	const reset = async () => {
+		loginRequestSend = false;
+		email = "";
+		token = "";
+	};
+
+	const login = async () => {
+		loading = true;
+		try {
+			if (!email) {
+				throw Error("email is required");
+			}
+
+			const { error } = await supabase.auth.signInWithOtp({
+				email: String(email),
+				options: { shouldCreateUser: false },
+			});
+
+			if (error) {
+				if (error instanceof AuthApiError) {
+					throw Error(error.message);
+				}
+
+				throw Error("Server error. Please try again later");
+			}
+
+			loginRequestSend = true;
+			toastSuccess.message =
+				"login request send. Please check ur emails!";
+			toastStore.trigger(toastSuccess);
+		} catch (error) {
+			toastError.message = error.message;
+			toastStore.trigger(toastError);
+		}
+		loading = false;
+	};
+
+	const verify = async () => {
+		loading = true;
+		try {
+			if (!type) {
+				throw Error("type is required");
+			}
+			if (!email) {
+				throw Error("email is required");
+			}
+			if (!token) {
+				throw Error("token is required");
+			}
+
+			const { data, error } = await supabase.auth.verifyOtp({
+				email: String(email),
+				token: String(token),
+				type: type,
+			});
+
+			if (error) {
+				if (error instanceof AuthApiError) {
+					throw Error(error.message);
+				}
+
+				throw Error("Server error. Please try again later");
+			}
+
+			reset();
+			toastSuccess.message =
+				"token verified!";
+			toastStore.trigger(toastSuccess);
+		} catch (error) {
+			toastError.message = error.message;
+			toastStore.trigger(toastError);
+		}
+		loading = false;
+	};
+
+	const logout = async () => {
+		try {
+			let { error } = await supabase.auth.signOut();
+
+			if (error) {
+				if (error instanceof AuthApiError) {
+					throw Error(error.message);
+				}
+
+				throw Error("Server error. Please try again later");
+			}
+
+			toastSuccess.message = "logout successful!";
+			toastStore.trigger(toastSuccess);
+			goto("/");
+		} catch (error) {
+			toastError.message = error.message;
+			toastStore.trigger(toastError);
+		}
+	};
 </script>
 
-<Toaster />
+<Toast />
 
-<!-- <Modal bind:open>
-	<div slot="header">
-		<h2>HELLO</h2>
-	</div>
-	<div slot="bottom">
-		<button type="button" on:click={() => (open = !open)}>close</button>
-	</div>
-</Modal> -->
-
-<div class="app">
-	<!-- {#if dev}
-		<button
-			type="button"
-			on:click={() => {
-				let sessionData = document.getElementById("sessionData");
-				if (sessionData.style.display == "none") {
-					sessionData.style.display = "block";
-				} else {
-					sessionData.style.display = "none";
-				}
-			}}>show session data</button
-		>
-		<pre id="sessionData" style="display: none;">
-			{JSON.stringify($page.data.session, null, 2)}
-		</pre>
-	{/if} -->
-
-	{#if !data.session && $page.url.pathname !== "/auth"}
-		<main>
-			<h2>Please login</h2>
-			<Login />
-		</main>
-	{:else}
-		<nav class:navbar-opened={isOpen}>
-			<Navbar bind:opened={isOpen} {links}>
-				<div class="navbar-bottom" slot="bottom">
-					<a
-						class="big nav-link"
-						data-sveltekit-prefetch
-						href="{base}/settings"
-					>
-						<i class="fa-sharp fa-solid fa-gear" />
-					</a>
-					<a
-						class="big nav-link"
-						data-sveltekit-prefetch
-						href="{base}/profile"
-					>
-						<i class="fa-sharp fa-regular fa-user" />
-					</a>
-					{#if $page.data.session}
-						<div class="big flex flex-end">
-							<Logout />
+{#if !data.session && $page.url.pathname !== "/auth"}
+	<AppShell>
+		<div class="flex justify-center items-start p-4">
+			{#if loading}
+				<section class="card w-96">
+					<div class="p-4 space-y-4">
+						<div class="grid grid-cols-2 gap-4">
+							<div class="placeholder animate-pulse" />
 						</div>
-						<!-- <form on:submit|preventDefault={logout}>
-							<button
-								class="big flex flex-end"
-								transparent
-								type="submit"
-								on:click={() => (isOpen = !isOpen)}
-							>
-								<i
-									class="fa-sharp fa-solid fa-arrow-right-from-bracket"
+						<div class="grid grid-cols-4 gap-4">
+							<div class="placeholder animate-pulse" />
+						</div>
+						<div class="placeholder animate-pulse" />
+						<div class="grid grid-cols-2 gap-4">
+							<div class="placeholder animate-pulse" />
+						</div>
+					</div>
+				</section>
+			{:else if !loginRequestSend}
+				<div class="card w-96">
+					<header class="card-header">
+						<h2>Please login</h2>
+					</header>
+					<form on:submit|preventDefault={login}>
+						<section class="p-4">
+							<input
+								type="hidden"
+								name="type"
+								bind:value={type}
+							/>
+							<label class="label">
+								<span>Email</span>
+								<input
+									class="input"
+									type="text"
+									name="email"
+									placeholder="email"
+									bind:value={email}
 								/>
-							</button>
-						</form> -->
-					{/if}
+							</label>
+						</section>
+						<footer class="card-footer">
+							<button class="btn variant-filled" type="submit"
+								>login</button
+							>
+						</footer>
+					</form>
 				</div>
-				<Logout />
-			</Navbar>
-		</nav>
-
-		<header class:navbar-opened={isOpen}>
-			<div class="header-item">
-				{#if isOpen}
+			{:else}
+				<div class="card w-96">
+					<header class="card-header">
+						<h2>Please login</h2>
+					</header>
+					<form on:submit|preventDefault={verify}>
+						<section class="p-4">
+							<input
+								type="hidden"
+								name="type"
+								bind:value={type}
+							/>
+							<label class="label">
+								<span>Email</span>
+								<input
+									class="input"
+									type="text"
+									name="email"
+									placeholder="email"
+									disabled
+									bind:value={email}
+								/>
+							</label>
+							<label class="label">
+								<span>Token</span>
+								<input
+									class="input"
+									type="text"
+									name="token"
+									placeholder="token"
+									bind:value={token}
+								/>
+							</label>
+						</section>
+						<footer class="card-footer">
+							<button class="btn variant-filled" type="submit"
+								>verify</button
+							>
+							<button class="btn variant-filled" on:click={reset}
+								>reset</button
+							>
+						</footer>
+					</form>
+				</div>
+			{/if}
+		</div>
+	</AppShell>
+{:else}
+	<AppShell>
+		<svelte:fragment slot="header">
+			<AppBar
+				gridColumns="grid-cols-3"
+				slotDefault="place-self-center"
+				slotTrail="place-content-end"
+			>
+				<svelte:fragment slot="lead">
 					<button
-						transparent
-						class="header-item big"
-						on:click={() => (isOpen = !isOpen)}
-					>
-						<i class="fa-sharp fa-solid fa-xmark" />
-					</button>
-				{:else}
-					<button
-						transparent
-						class="header-item big"
-						on:click={() => (isOpen = !isOpen)}
+						type="button"
+						class="btn bg-initial"
+						on:click={() => {
+							opened = !opened;
+						}}
 					>
 						<i class="fa-sharp fa-solid fa-bars" />
 					</button>
-				{/if}
+				</svelte:fragment>
+				<a href={base}>
+					<img class="w-12 h-12" src={logo} alt="Logo" />
+				</a>
+				<svelte:fragment slot="trail">
+					<LightSwitch />
+				</svelte:fragment>
+			</AppBar>
+		</svelte:fragment>
+		<svelte:fragment slot="sidebarLeft">
+			<div style="height:100%" hidden={opened}>
+				<AppRail>
+					{#each links as link}
+						<AppRailTile
+							tag="a"
+							label={link.name}
+							href={link.path}
+							class={link.path === $page.url.pathname
+								? "!bg-primary-500"
+								: ""}
+						>
+							<i class={link.cssClasses} />
+						</AppRailTile>
+					{/each}
+					<svelte:fragment slot="trail">
+						<AppRailTile>
+							<button
+								type="button"
+								class="btn bg-initial"
+								on:click|preventDefault={logout}
+							>
+								<i
+									class="fa-sharp fa-solid fa-right-from-bracket"
+								/>
+							</button>
+						</AppRailTile>
+					</svelte:fragment>
+				</AppRail>
 			</div>
-			<a class="header-item flex" href={base}>
-				<img class="logo" src={logo} alt="Logo" />
-			</a>
-			<div class="header-item">
-				<!-- <Darkmode /> -->
+		</svelte:fragment>
+		<svelte:fragment slot="pageHeader" />
+		<div class="flex justify-center items-start pt-4 pl-4 pr-4">
+			<div class="max-w-full">
+				<slot />
 			</div>
-		</header>
-		<main class:navbar-opened={isOpen}>
-			<slot />
-		</main>
-	{/if}
-</div>
+		</div>
+		<!-- <svelte:fragment slot="pageFooter">Page Footer</svelte:fragment>
+		<svelte:fragment slot="footer">Footer</svelte:fragment> -->
+	</AppShell>
+{/if}
 
 <style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-		width: 100vw;
-		box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-		overflow-x: hidden;
-	}
-
-	nav {
-		display: flex;
-		height: 100vh;
-		width: var(--navbar-width);
-		transform: translateX(calc(var(--navbar-width) * -1));
-		-webkit-transform: translateX(calc(var(--navbar-width) * -1));
-		position: fixed;
-		transition: transform 700ms ease;
-		overflow-x: hidden;
-	}
-
-	nav.navbar-opened {
-		transform: translateX(0%);
-		-webkit-transform: translateX(0%);
-	}
-
-	header {
-		display: flex;
-		align-items: center;
-		gap: 2rem;
-		width: 100vw;
-		height: 10vh;
-		max-height: 96px;
-		transform: translateX(0px);
-		-webkit-transform: translateX(0px);
-		transition: transform 700ms ease;
-		justify-content: space-between;
-	}
-
-	header.navbar-opened {
-		transform: translateX(var(--navbar-width));
-		-webkit-transform: translateX(var(--navbar-width));
-	}
-
-	.header-item {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 20vw;
-	}
-
-	.logo {
-		max-width: 120px;
-		max-height: 7vh;
-	}
-
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding: 1rem;
-		width: 100vw;
-		min-height: 90vh;
-		max-width: 64rem;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-
-	main {
-		transition: transform 700ms ease;
-		position: relative;
-		transform: translateX(0px);
-		-webkit-transform: translateX(0px);
-	}
-
-	main.navbar-opened {
-		transform: translateX(var(--navbar-width));
-		-webkit-transform: translateX(var(--navbar-width));
-	}
-
-	.navbar-bottom {
-		display: flex;
-		width: 100%;
-		flex-direction: row;
-		margin: 0.5rem 1rem;
-	}
-
-	@media (min-width: 480px) {
-		.header-item {
-			width: 150px;
-		}
-	}
 </style>

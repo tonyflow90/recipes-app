@@ -68,6 +68,17 @@
 	<meta name="description" content="Category list" />
 </svelte:head>
 
+<div class="logo-cloud grid-cols-1 xl:grid-cols-2 2xl:grid-cols-4 gap-0.5">
+	<a href="/elements/logo-clouds" class="logo-item">HR Solutions</a>
+	<a href="/elements/logo-clouds" class="logo-item">Acme Theaters</a>
+	<a href="/elements/logo-clouds" class="logo-item">Cruisin' Cuisine</a>
+	<a href="/elements/logo-clouds" class="logo-item">Arcane Security</a>
+	<a href="/elements/logo-clouds" class="logo-item">Stark Industries</a>
+	<a href="/elements/logo-clouds" class="logo-item">Gekko & Co.</a>
+	<a href="/elements/logo-clouds" class="logo-item">Acme Corp.</a>
+	<a href="/elements/logo-clouds" class="logo-item">Wonka Inc.</a>
+</div>
+
 <div class="head">
 	<h2 class="flex">category list</h2>
 

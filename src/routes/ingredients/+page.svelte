@@ -90,6 +90,20 @@
 			else await update();
 		};
 	};
+
+	import { tableMapperValues } from "@skeletonlabs/skeleton";
+
+	let ingredients: Ingredient[];
+
+	const tableSource: TableSource = {
+		head: ["Name", "Updated"],
+		body: tableMapperValues(data.ingredients, ["name", "updated_at"]),
+		meta: tableMapperValues(data.ingredients, ["name", "updated_at"]),
+		// foot: ["Total", "", "<code>31.7747</code>"],
+	};
+
+	import { Table } from "@skeletonlabs/skeleton";
+	import type { TableSource } from "@skeletonlabs/skeleton";
 </script>
 
 <svelte:head>
@@ -97,7 +111,30 @@
 	<meta name="description" content="Ingredient list" />
 </svelte:head>
 
-<div class="head">
+<div class="flex justify-center">
+	<h2 class="flex text-center">ingredient list</h2>
+</div>
+
+{#await data.ingredients}
+	<section class="card w-96">
+		<div class="p-4 space-y-4">
+			<div class="grid grid-cols-2 gap-4">
+				<div class="placeholder animate-pulse" />
+			</div>
+			<div class="grid grid-cols-4 gap-4">
+				<div class="placeholder animate-pulse" />
+			</div>
+			<div class="placeholder animate-pulse" />
+			<div class="grid grid-cols-2 gap-4">
+				<div class="placeholder animate-pulse" />
+			</div>
+		</div>
+	</section>
+{:then ingredients}
+	<Table source={tableSource} />
+{/await}
+
+<!-- <div class="head">
 	<h2 class="flex">ingredient list</h2>
 
 	<button transparent on:click={() => (edit = !edit)}>
@@ -116,7 +153,6 @@
 <ul class="container">
 	{#each data.ingredients as ingredient}
 		<li>
-			<!-- <span class="flex">{ingredient.name}</span> -->
 			<form
 				class="flex"
 				action="?/update"
@@ -150,10 +186,11 @@
 			</form>
 		</li>
 	{/each}
-</ul>
+</ul> -->
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<dialog open={dialogOpened} on:close={() => (dialogOpened = false)}>
+
+<!-- <dialog open={dialogOpened} on:close={() => (dialogOpened = false)}>
 	<button
 		transparent
 		class="rounded dialog-close-btn"
@@ -175,12 +212,11 @@
 			</button>
 		</form>
 	</div>
-</dialog>
-
+</dialog> -->
 <style>
-	li form {
+	/* li form {
 		display: flex;
 		flex-direction: row;
 		gap: 0.5rem;
-	}
+	} */
 </style>

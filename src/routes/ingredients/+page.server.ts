@@ -21,10 +21,14 @@ export const load: PageServerLoad = (async ({ parent }) => {
     await parent();
 
     return {
-        ingredients: readIngredients()
+        ingredients: readIngredients2()
     };
 })
 
+const readIngredients2 = async () => {
+    const { data, error } = await supabase.from("ingredients").select();
+    return new Promise(resolve => setTimeout(resolve(data), 6000));
+}
 const readIngredients = async () => {
     const { data, error } = await supabase.from("ingredients").select();
     return data;
